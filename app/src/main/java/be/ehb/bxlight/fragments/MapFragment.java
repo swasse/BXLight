@@ -124,11 +124,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setInfoWindowAdapter(infoWindowAdapter);
 
         updateCamera();
         drawMarkers();
-
-        mMap.setInfoWindowAdapter(infoWindowAdapter);
     }
 
     private void updateCamera() {
@@ -143,7 +142,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             LatLng coord = new LatLng(element.getLatitude(), element.getLongitude());
             Marker m = mMap.addMarker(new MarkerOptions()
                     .position(coord)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
+                    .icon(BitmapDescriptorFactory.defaultMarker(40))
                     .title(element.getCharacterName())
             );
             m.setTag(element);

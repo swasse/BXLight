@@ -4,5 +4,5 @@
     <string name="title_overview">Overview</string>
     <string name="title_about">About</string>
 
-    <string name="str_tv_loading">Preparing your routes</string>
+    <string name="str_tv_loading">Downloading all points of interest \nThis may take a while </string>
 </resources>

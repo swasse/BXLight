@@ -24,6 +24,8 @@
         android:layout_height="wrap_content"
         android:background="@color/colorTextBG"
         android:gravity="center"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
         android:text="@string/str_tv_loading"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@android:color/background_light"
