@@ -5,4 +5,5 @@
     <string name="title_about">About</string>
 
     <string name="str_tv_loading">Downloading all points of interest \nThis may take a while </string>
+    <string name="str_mi_sync">Synchronize</string>
 </resources>

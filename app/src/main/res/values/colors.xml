@@ -3,6 +3,8 @@
     <color name="colorPrimary">#8B7D80</color>
     <color name="colorPrimaryDark">#3E3234</color>
     <color name="colorAccent">#8E3137</color>
+    <color name="colorAccentAlternative">#B98138</color>
     <color name="windowBG">#DAD4D4</color>
     <color name="colorTextBG">#80000000</color>
+    <color name="colorTextFaded">#BFFFFFFF</color>
 </resources>
