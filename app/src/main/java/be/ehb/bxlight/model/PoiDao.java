@@ -14,12 +14,12 @@ import be.ehb.bxlight.model.entities.ComicPOI;
  * Created by Banaan on 20/01/2038. ;)
  */
 @Dao
-public interface ComicDAO {
+public interface PoiDao {
     @Insert(onConflict = OnConflictStrategy.FAIL)
-    void insert(ComicPOI item);
+    void insertComic(ComicPOI item);
 
     @Update(onConflict = OnConflictStrategy.IGNORE)
-    void update(ComicPOI item);
+    void updateComic(ComicPOI item);
 
     @Query("SELECT * FROM ComicPOI")
     List<ComicPOI> getAllComicArt();

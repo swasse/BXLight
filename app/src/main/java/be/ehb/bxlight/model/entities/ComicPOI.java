@@ -4,11 +4,13 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
+
 /**
  * Created by Banaan on 20/01/2038. ;)
  */
 @Entity
-public class ComicPOI {
+public class ComicPOI implements Serializable {
 
     @PrimaryKey
     @NonNull
@@ -77,18 +79,5 @@ public class ComicPOI {
 
     public void setBuildYear(String buildYear) {
         this.buildYear = buildYear;
-    }
-
-    @Override
-    public String toString() {
-        return "ComicPOI{" +
-                "id=" + id +
-                ", author='" + author + '\'' +
-                ", image='" + image + '\'' +
-                ", characterName='" + characterName + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", buildYear='" + buildYear + '\'' +
-                '}';
     }
 }

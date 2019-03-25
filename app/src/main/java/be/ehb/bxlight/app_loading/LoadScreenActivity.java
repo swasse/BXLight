@@ -7,6 +7,7 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import java.io.IOException;
 
@@ -30,17 +31,19 @@ public class LoadScreenActivity extends AppCompatActivity {
         mDownloadHandler = new DownloadHandler(this);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if (!sp.getBoolean("downloaded", false)) {
-            startDownload();
+        if (!sp.getBoolean("downloaded_comic", false)) {
+            startDownloadComics();
         } else {
-            Intent i = new Intent(this, MainActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(i);
+            Message msg = new Message();
+            msg.what = 0;
+            mDownloadHandler.sendMessage(msg);
         }
     }
 
-    private void startDownload() {
-        Thread downloadThread = new Thread(new Runnable() {
+
+
+    private void startDownloadComics() {
+        Thread comicDownloadThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -56,12 +59,13 @@ public class LoadScreenActivity extends AppCompatActivity {
                     Bundle data = new Bundle();
                     data.putString("JSON", response.body() != null ? response.body().string() : null);
                     msg.setData(data);
+                    msg.what = 1;
                     mDownloadHandler.sendMessage(msg);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
-        downloadThread.start();
+        comicDownloadThread.start();
     }
 }

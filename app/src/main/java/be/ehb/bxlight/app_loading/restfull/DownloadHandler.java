@@ -10,7 +10,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.util.Log;
+import android.support.v4.content.LocalBroadcastManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,11 +19,11 @@ import org.json.JSONObject;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.net.URL;
-import java.util.concurrent.ExecutionException;
 
 import be.ehb.bxlight.MainActivity;
-import be.ehb.bxlight.model.ComicDatabase;
+import be.ehb.bxlight.model.PoiDatabase;
 import be.ehb.bxlight.model.entities.ComicPOI;
 
 /**
@@ -40,8 +40,22 @@ public class DownloadHandler extends Handler {
     @Override
     public void handleMessage(Message msg) {
         super.handleMessage(msg);
+
+        switch (msg.what){
+            case 0:
+                Intent i = new Intent(context, MainActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(i);
+                return;
+            case 1:
+                handleComics(msg.getData().getString("JSON"));
+                break;
+        }
+    }
+
+    private void handleComics(String dataRaw) {
         try {
-            JSONObject data = new JSONObject(msg.getData().getString("JSON"));
+            JSONObject data = new JSONObject(dataRaw);
             JSONArray records = data.getJSONArray("records");
 
             int nrOfElements = records.length();
@@ -64,54 +78,49 @@ public class DownloadHandler extends Handler {
                         fields.getJSONObject("photo").getString("id") +
                         "/300";
 
-                DownloadImageTask task = new DownloadImageTask(fields.getJSONObject("photo").getString("id"));
+                String tempName = fields.getJSONObject("photo").getString("id");
+                DownloadImageTask task = new DownloadImageTask(tempName, context);
                 task.execute(pictureURL);
-
-                newComicPOI.setImage(task.get());
+                newComicPOI.setImage(tempName + ".jpg");
 
                 try{
-                    ComicDatabase.getInstance(context).getComicDAO().insert(newComicPOI);
+                    PoiDatabase.getInstance(context).getPoiDao().insertComic(newComicPOI);
                 } catch (SQLiteConstraintException exception) {
-                    ComicDatabase.getInstance(context).getComicDAO().update(newComicPOI);
+                    PoiDatabase.getInstance(context).getPoiDao().updateComic(newComicPOI);
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
         }
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        sp.edit().putBoolean("downloaded", true).apply();
-
-        //Done parsing, open main
+        sp.edit().putBoolean("downloaded_comic", true).apply();
+        //Done parsing, update main
         Intent i = new Intent(context, MainActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
     }
 
-    private class DownloadImageTask extends AsyncTask<String, Void, String>{
+    private static class DownloadImageTask extends AsyncTask<String, Void, Void>{
 
         private String name;
+        private WeakReference<Context> contextReference;
 
-        DownloadImageTask(String name) {
+        DownloadImageTask(String name, Context context) {
             this.name = name;
+            contextReference = new WeakReference<>(context);
         }
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected Void doInBackground(String... strings) {
             try {
                 InputStream inputStream = new URL(strings[0]).openStream();    // Download Image from URL
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);       // Decode Bitmap
                 inputStream.close();
 
-                FileOutputStream foStream = context.openFileOutput(name+".jpeg", Context.MODE_PRIVATE);
+                FileOutputStream foStream = contextReference.get().openFileOutput(name+".jpg", Context.MODE_PRIVATE);
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, foStream);
                 foStream.close();
-
-                return name+".jpeg";
 
             } catch (IOException e) {
                 e.printStackTrace();

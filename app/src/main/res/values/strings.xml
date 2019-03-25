@@ -6,4 +6,13 @@
 
     <string name="str_tv_loading">Downloading all points of interest \nThis may take a while </string>
     <string name="str_mi_sync">Synchronize</string>
+    <string name="str_about_header" > This application started as an example to showcase what\'s possible in Android and got slightly out of hand</string>
+    <string name="pay_me">If you like my work, feel free to drop me a Ko-Fi</string>
+    <string name="str_about_data_providers">This app uses stock images from pexel
+        \n https://www.pexels.com/photo-license/
+        \n\nComic murals come from the open data platform of Brussels,
+        \nhttps://bruxellesdata.opendatasoft.com/page/home/
+        \n\nThis data falls under the EtaLab open license
+        \nhttps://www.etalab.gouv.fr/wp-content/uploads/2014/05/Licence_Ouverte.pdf
+        </string>
 </resources>
